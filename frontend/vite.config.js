@@ -4,4 +4,7 @@ import flowbiteReact from "flowbite-react/plugin/vite";
 
 export default defineConfig({
   plugins: [tailwindcss(), flowbiteReact()],
+   build: {
+    outDir: 'dist' // This is crucial for Vercel
+  }
 })
