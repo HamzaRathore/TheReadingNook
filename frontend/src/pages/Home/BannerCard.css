@@ -1,0 +1,69 @@
+.banner .swiper {
+    width: 280px;
+    height: 410px;
+  }
+  
+  @media (min-width: 768px) {
+    .banner .swiper {
+      width: 320px;
+      height: 440px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .banner .swiper {
+      width: 380px;
+      height: 550px;
+    }
+  }
+  .banner .swiper-slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+  
+  .banner .swiper-slide:nth-child(1n) {
+    background-image: url('src/assets/banner-images/book1.webp');
+    
+  }
+  
+  .banner .swiper-slide:nth-child(2n) {
+    background-image: url('src/assets/banner-images/book2.jpg');
+  }
+  
+  .banner .swiper-slide:nth-child(3n) {
+    background-image: url('src/assets/banner-images/book3.webp');
+  }
+  
+  .banner .swiper-slide:nth-child(4n) {
+    background-image: url('src/assets/banner-images/book4.webp');
+  }
+  
+  .banner .swiper-slide:nth-child(5n) {
+    background-image: url('src/assets/banner-images/book5.jpg');
+  }
+  
+  .banner .swiper-slide:nth-child(6n) {
+    background-image: url('src/assets/banner-images/book6.png');
+  }
+  
+  .banner .swiper-slide:nth-child(7n) {
+    background-image: url('src/assets/banner-images/book7.jpg');
+  }
+  
+  .banner .swiper-slide:nth-child(8n) {
+    background-image: url('src/assets/banner-images/book8.webp');
+  }
+  
+  .banner .swiper-slide:nth-child(9n) {
+    background-image: url('src/assets/banner-images/book9.webp');
+  }
+  
+  
