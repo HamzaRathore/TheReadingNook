@@ -52,31 +52,31 @@ const SideBar = () => {
           </SidebarLogo>
           <SidebarItems>
             <SidebarItemGroup>
-              <SidebarItem href="/admin/dashboard" icon={HiChartPie}>
+              <SidebarItem href="https://thereadingnook-production.up.railway.app/admin/dashboard" icon={HiChartPie}>
                 Dashboard
               </SidebarItem>
               <SidebarItem
-                href="/admin/dashboard/upload"
+                href="https://thereadingnook-production.up.railway.app/admin/dashboard/upload"
                 icon={HiOutlineCloudUpload}
               >
                 Upload
               </SidebarItem>
-              <SidebarItem href="/admin/dashboard/manage" icon={HiInbox}>
+              <SidebarItem href="https://thereadingnook-production.up.railway.app/admin/dashboard/manage" icon={HiInbox}>
                 Manage Books
               </SidebarItem>
 
-              <SidebarItem href="/shop" icon={HiShoppingBag}>
+              <SidebarItem href="https://thereadingnook-production.up.railway.app/shop" icon={HiShoppingBag}>
                 books
               </SidebarItem>
-              <SidebarItem href="/login" icon={HiArrowSmRight}>
+              <SidebarItem href="https://thereadingnook-production.up.railway.app/login" icon={HiArrowSmRight}>
                 Sign In
               </SidebarItem>
-              <SidebarItem href="/logout" icon={HiTable}>
+              <SidebarItem href="https://thereadingnook-production.up.railway.app/logout" icon={HiTable}>
                 Log Out
               </SidebarItem>
             </SidebarItemGroup>
             <SidebarItemGroup>
-              <SidebarItem href="/about" icon={HiViewBoards}>
+              <SidebarItem href="https://thereadingnook-production.up.railway.app/about" icon={HiViewBoards}>
                 About
               </SidebarItem>
               <SidebarItem href="#" icon={BiBuoy}>
