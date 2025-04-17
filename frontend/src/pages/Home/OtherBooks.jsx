@@ -7,7 +7,7 @@ const OtherBooks = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/books/all-Books")
+    fetch("https://thereadingnook-production.up.railway.app/books/all-Books")
       .then((res) => res.json())
       .then((data) => {
         console.log("API Response:", data); // debug log
