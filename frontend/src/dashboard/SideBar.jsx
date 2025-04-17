@@ -52,16 +52,16 @@ const SideBar = () => {
           </SidebarLogo>
           <SidebarItems>
             <SidebarItemGroup>
-              <SidebarItem href="https://thereadingnook-production.up.railway.app/admin/dashboard" icon={HiChartPie}>
+              <SidebarItem href="https://the-reading-nook.vercel.app/admin/dashboard" icon={HiChartPie}>
                 Dashboard
               </SidebarItem>
               <SidebarItem
-                href="https://thereadingnook-production.up.railway.app/admin/dashboard/upload"
+                href="https://the-reading-nook.vercel.app/admin/dashboard/upload"
                 icon={HiOutlineCloudUpload}
               >
                 Upload
               </SidebarItem>
-              <SidebarItem href="https://thereadingnook-production.up.railway.app/admin/dashboard/manage" icon={HiInbox}>
+              <SidebarItem href="https://the-reading-nook.vercel.app/admin/dashboard/manage" icon={HiInbox}>
                 Manage Books
               </SidebarItem>
 
@@ -71,12 +71,12 @@ const SideBar = () => {
               <SidebarItem href="https://thereadingnook-production.up.railway.app/login" icon={HiArrowSmRight}>
                 Sign In
               </SidebarItem>
-              <SidebarItem href="https://thereadingnook-production.up.railway.app/logout" icon={HiTable}>
+              <SidebarItem href="https://the-reading-nook.vercel.app/logout" icon={HiTable}>
                 Log Out
               </SidebarItem>
             </SidebarItemGroup>
             <SidebarItemGroup>
-              <SidebarItem href="https://thereadingnook-production.up.railway.app/about" icon={HiViewBoards}>
+              <SidebarItem href="https://the-reading-nook.vercel.app/about" icon={HiViewBoards}>
                 About
               </SidebarItem>
               <SidebarItem href="#" icon={BiBuoy}>
