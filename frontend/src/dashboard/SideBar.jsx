@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiOutlineCloudUpload, HiShoppingBag, HiTable, HiViewBoards, HiMenu, HiX } from "react-icons/hi";
 import user from "../assets/UserPlaceholder.png";
 import { AuthContext } from "../context/AuthProvider";
+import { BiBuoy } from "react-icons/bi";
 
 const SideBar = () => {
   const [isOpen, setIsOpen] = useState(false);
