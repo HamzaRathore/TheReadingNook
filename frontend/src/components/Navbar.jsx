@@ -95,7 +95,7 @@ const Navbar = () => {
             </button>
             {/* <span className="mx-1"></span> */}
             <div className="font-bold text-lg pl-0.5">
-            {user? user.displayName:""}
+            {user?.displayName ?? ""}
             </div>
           </div>
 
