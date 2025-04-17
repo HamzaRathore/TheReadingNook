@@ -1,294 +1,305 @@
-import React, { useState, useEffect } from 'react';
-import { FaEdit, FaTrash, FaSearch, FaPlus, FaStar } from 'react-icons/fa';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
-import { ToastContainer } from "react-toastify";
-import { handleError, handleSuccess } from "../utils";
+import { useLoaderData, useParams, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  FaBook,
+  FaUserEdit,
+  FaImage,
+  FaAlignLeft,
+  FaTags,
+  FaDollarSign,
+  FaUpload,
+  FaStar,
+} from "react-icons/fa";
 
-const ManageBooks = () => {
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 8;
+const EditBooks = () => {
+  const { id } = useParams();
+  const loadedBook = useLoaderData();
+  const navigate = useNavigate();
 
-  // Fetch books from API
+  const [bookData, setBookData] = useState({
+    title: loadedBook?.title || "",
+    author: loadedBook?.author || "",
+    imageURL: loadedBook?.imageURL || "",
+    description: loadedBook?.description || "",
+    category: loadedBook?.category || "",
+    price: loadedBook?.price || "",
+    isBestSeller: loadedBook?.isBestSeller || false,
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const categories = [
+    "Comedy",
+    "Fiction",
+    "Non-Fiction",
+    "Science",
+    "Technology",
+    "Biography",
+    "History",
+    "Fantasy",
+    "Romance",
+    "Horror",
+    "Thriller",
+    "Self-Help",
+    "Crime",
+    "Mystery",
+  ];
+
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await axios.get('https://thereadingnook-production.up.railway.app/books/all-Books');
-        setBooks(response.data.books);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching books:', error);
-        setLoading(false);
-      }
-    };
-    fetchBooks();
-  }, []);
+    console.log("Loaded Book Data:", loadedBook);
+  }, [loadedBook]);
 
-  // Delete book
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this book?')) {
-      try {
-        await axios.delete(`https://thereadingnook-production.up.railway.app/books/delete/${id}`);
-        setBooks(books.filter(book => book._id !== id));
-        handleSuccess("Book deleted successfully!");
-      } catch (error) {
-        console.error('Error deleting book:', error);
-        handleError("Book deletion failed!");
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setBookData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      // Validate required fields
+      if (!bookData.title || !bookData.author || !bookData.price) {
+        throw new Error("Please fill all required fields");
       }
+
+      const response = await fetch(`https://thereadingnook-production.up.railway.app/books/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update book");
+      }
+
+      const result = await response.json();
+      console.log("Update successful:", result);
+      navigate("/admin/dashboard/manage", {
+        state: { message: "Book updated successfully!" },
+      });
+    } catch (error) {
+      console.error("Update error:", error);
+      setError(error.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Filter books based on search term
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  // Pagination logic
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
-  const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
-
   return (
-    <div className="min-h-screen w-full bg-gray-50 p-4 sm:p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row justify-between items-start md:items-center mb-6 md:mb-8">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">Book Management</h1>
-            <p className="text-sm sm:text-base text-gray-600">Manage your book inventory</p>
-          </div>
-          <div className="w-full md:w-auto flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search books..."
-                className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <FaSearch className="absolute left-3 top-3 text-gray-400" />
-            </div>
-            <Link to="/admin/dashboard/upload" className="w-full sm:w-auto">
-              <button className="w-full lg:w-40 bg-indigo-600 cursor-pointer hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center justify-center">
-                <FaPlus className="mr-2" />
-                Add Book
-              </button>
-            </Link>
-          </div>
+    <div className="min-h-screen w-screen bg-gradient-to-br from-indigo-50 to-purple-50 py-12 sm:px-6">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-3">
+            Update The Book
+          </h1>
+          <p className="text-xl text-gray-600">
+            Fill in the details to update book in the collection
+          </p>
         </div>
 
-        {/* Book Table */}
-        <div className="bg-white rounded-xl shadow-md overflow-hidden">
-          {loading ? (
-            <div className="p-8 text-center">Loading books...</div>
-          ) : (
-            <>
-              {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Author</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
-                    {currentBooks.length > 0 ? (
-                      currentBooks.map((book) => (
-                        <tr key={book._id} className="hover:bg-gray-50">
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 h-10 w-10">
-                                <img
-                                  className="h-10 w-10 rounded-md object-cover"
-                                  src={book.imageURL || 'https://via.placeholder.com/40'}
-                                  alt={book.title}
-                                />
-                              </div>
-                              <div className="ml-4">
-                                <div className="text-sm font-medium text-gray-900">{book.title}</div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <div className="text-sm text-gray-900">{book.author}</div>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                              {book.category}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            ${book.price}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            {book.isBestSeller ? (
-                              <span className="flex items-center text-sm text-yellow-600">
-                                <FaStar className="mr-1" /> Best Seller
-                              </span>
-                            ) : (
-                              <span className="text-sm text-gray-500">Regular</span>
-                            )}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <Link to={`/admin/dashboard/edit-books/${book._id}`}>
-                              <button className="text-indigo-600 cursor-pointer hover:text-indigo-900 mr-4">
-                                <FaEdit className="inline mr-1" /> Edit
-                              </button>
-                            </Link>
-                            <button
-                              className="text-red-600 hover:text-red-900 hover:cursor-pointer"
-                              onClick={() => handleDelete(book._id)}
-                            >
-                              <FaTrash className="inline mr-1" /> Delete
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                          No books found
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+        {error && (
+          <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
+            {error}
+          </div>
+        )}
 
-              {/* Mobile Cards */}
-              <div className="md:hidden">
-                {currentBooks.length > 0 ? (
-                  currentBooks.map((book) => (
-                    <div key={book._id} className="p-4 border-b border-gray-200">
-                      <div className="flex items-start space-x-4">
-                        <div className="flex-shrink-0">
-                          <img
-                            className="h-16 w-16 rounded-md object-cover"
-                            src={book.imageURL || 'https://via.placeholder.com/64'}
-                            alt={book.title}
-                          />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="text-sm font-medium text-gray-900 truncate">{book.title}</div>
-                          <div className="text-sm text-gray-500">{book.author}</div>
-                          <div className="mt-1 flex flex-wrap items-center gap-2">
-                            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-indigo-100 text-indigo-800">
-                              {book.category}
-                            </span>
-                            <span className="text-sm font-medium text-gray-900">${book.price}</span>
-                            {book.isBestSeller && (
-                              <span className="flex items-center text-xs text-yellow-600">
-                                <FaStar className="mr-1" /> Best Seller
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex justify-end space-x-3">
-                        <Link to={`/admin/dashboard/edit-books/${book._id}`}>
-                          <button className="text-indigo-600 cursor-pointer hover:text-indigo-900 text-sm flex items-center">
-                            <FaEdit className="mr-1" /> Edit
-                          </button>
-                        </Link>
-                        <button
-                          className="text-red-600 hover:text-red-900 text-sm flex items-center"
-                          onClick={() => handleDelete(book._id)}
-                        >
-                          <FaTrash className="mr-1" /> Delete
-                        </button>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <div className="p-4 text-center text-gray-500">
-                    No books found
-                  </div>
-                )}
-              </div>
+        <form
+          onSubmit={handleUpdate}
+          className="bg-white shadow-xl rounded-2xl p-8"
+        >
+          {/* Book Title */}
+          <div className="mb-6">
+            <label
+              htmlFor="title"
+              className="flex items-center text-lg font-medium text-gray-700 mb-2"
+            >
+              <FaBook className="mr-2 text-indigo-500" />
+              Book Title *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={bookData.title}
+              onChange={handleChange}
+              placeholder="Enter book title"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              required
+            />
+          </div>
 
-              {/* Pagination */}
-              {filteredBooks.length > booksPerPage && (
-                <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
-                  <div className="flex-1 flex justify-between sm:hidden">
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                      disabled={currentPage === 1}
-                      className="relative cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                      className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                    >
-                      Next
-                    </button>
-                  </div>
-                  <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                      <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{indexOfFirstBook + 1}</span> to{' '}
-                        <span className="font-medium">
-                          {Math.min(indexOfLastBook, filteredBooks.length)}
-                        </span>{' '}
-                        of <span className="font-medium">{filteredBooks.length}</span> results
-                      </p>
-                    </div>
-                    <div>
-                      <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        <button
-                          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                          disabled={currentPage === 1}
-                          className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                          <span className="sr-only">Previous</span>
-                          &lt;
-                        </button>
-                        {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                          <button
-                            key={page}
-                            onClick={() => setCurrentPage(page)}
-                            className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                              currentPage === page
-                                ? 'z-10 bg-indigo-50 border-indigo-500 text-indigo-600'
-                                : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        ))}
-                        <button
-                          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                          disabled={currentPage === totalPages}
-                          className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
-                        >
-                          <span className="sr-only">Next</span>
-                          &gt;
-                        </button>
-                      </nav>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </div>
+          {/* Author Name */}
+          <div className="mb-6">
+            <label
+              htmlFor="author"
+              className="flex items-center text-lg font-medium text-gray-700 mb-2"
+            >
+              <FaUserEdit className="mr-2 text-indigo-500" />
+              Author Name *
+            </label>
+            <input
+              type="text"
+              id="author"
+              name="author"
+              value={bookData.author}
+              onChange={handleChange}
+              placeholder="Enter author name"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              required
+            />
+          </div>
+
+          {/* Image URL */}
+          <div className="mb-6">
+            <label
+              htmlFor="imageURL"
+              className="flex items-center text-lg font-medium text-gray-700 mb-2"
+            >
+              <FaImage className="mr-2 text-indigo-500" />
+              Book Cover Image URL *
+            </label>
+            <input
+              type="url"
+              id="imageURL"
+              name="imageURL"
+              value={bookData.imageURL}
+              onChange={handleChange}
+              placeholder="https://example.com/book-cover.jpg"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              required
+            />
+            {bookData.imageURL && (
+              <div className="mt-2">
+                <p className="text-sm text-gray-500 mb-1">Image Preview:</p>
+                <img
+                  src={bookData.imageURL}
+                  alt="Book cover preview"
+                  className="h-32 object-contain border rounded"
+                  onError={(e) => {
+                    e.target.src =
+                      "https://via.placeholder.com/150x200?text=Invalid+URL";
+                  }}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Price */}
+          <div className="mb-6">
+            <label
+              htmlFor="price"
+              className="flex items-center text-lg font-medium text-gray-700 mb-2"
+            >
+              <FaDollarSign className="mr-2 text-indigo-500" />
+              Price *
+            </label>
+            <input
+              type="number"
+              id="price"
+              name="price"
+              value={bookData.price}
+              onChange={handleChange}
+              placeholder="Enter price in USD"
+              min="0"
+              step="0.01"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              required
+            />
+          </div>
+
+          {/* Description */}
+          <div className="mb-6">
+            <label
+              htmlFor="description"
+              className="flex items-center text-lg font-medium text-gray-700 mb-2"
+            >
+              <FaAlignLeft className="mr-2 text-indigo-500" />
+              Description *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={bookData.description}
+              onChange={handleChange}
+              rows="5"
+              placeholder="Enter book description..."
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              required
+            />
+          </div>
+
+          {/* Category */}
+          <div className="mb-6">
+            <label
+              htmlFor="category"
+              className="flex items-center text-lg font-medium text-gray-700 mb-2"
+            >
+              <FaTags className="mr-2 text-indigo-500" />
+              Category *
+            </label>
+            <select
+              id="category"
+              name="category"
+              value={bookData.category}
+              onChange={handleChange}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all"
+              required
+            >
+              <option value="">Select a category</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Best Seller */}
+          <div className="mb-8 flex items-center">
+            <input
+              type="checkbox"
+              id="isBestSeller"
+              name="isBestSeller"
+              checked={bookData.isBestSeller}
+              onChange={handleChange}
+              className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500"
+            />
+            <label
+              htmlFor="isBestSeller"
+              className="ml-2 flex items-center text-gray-700"
+            >
+              <FaStar className="text-yellow-400 mr-1" />
+              Mark as Best Seller
+            </label>
+          </div>
+
+          {/* Submit Button */}
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              disabled={isLoading}
+              className={`flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 ${
+                isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
+            >
+              <FaUpload className="mr-2" />
+              {isLoading ? "Updating..." : "Update Book"}
+            </button>
+          </div>
+        </form>
       </div>
-      <ToastContainer />
     </div>
   );
 };
 
-export default ManageBooks;
+export default EditBooks;
