@@ -56,7 +56,7 @@ const SideBar = () => {
                 Dashboard
               </SidebarItem>
               <SidebarItem
-                href="https://the-reading-nook.vercel.app/admin/dashboard/upload"
+                href="admin/dashboard/upload"
                 icon={HiOutlineCloudUpload}
               >
                 Upload
