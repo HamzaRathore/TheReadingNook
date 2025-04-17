@@ -69,7 +69,7 @@ const EditBooks = () => {
         throw new Error("Please fill all required fields");
       }
 
-      const response = await fetch(`http://localhost:5000/books/update/${id}`, {
+      const response = await fetch(`https://thereadingnook-production.up.railway.app/books/update/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
