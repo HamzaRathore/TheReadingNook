@@ -30,40 +30,40 @@
   }
   
   .banner .swiper-slide:nth-child(1n) {
-    background-image: url('src/assets/banner-images/book1.webp');
+    background-image: url('/banner-images/book1.webp');
     
   }
   
   .banner .swiper-slide:nth-child(2n) {
-    background-image: url('src/assets/banner-images/book2.jpg');
+    background-image: url('/banner-images/book2.jpg');
   }
   
   .banner .swiper-slide:nth-child(3n) {
-    background-image: url('src/assets/banner-images/book3.webp');
+    background-image: url('/banner-images/book3.webp');
   }
   
   .banner .swiper-slide:nth-child(4n) {
-    background-image: url('src/assets/banner-images/book4.webp');
+    background-image: url('/banner-images/book4.webp');
   }
   
   .banner .swiper-slide:nth-child(5n) {
-    background-image: url('src/assets/banner-images/book5.jpg');
+    background-image: url('/banner-images/book5.jpg');
   }
   
   .banner .swiper-slide:nth-child(6n) {
-    background-image: url('src/assets/banner-images/book6.png');
+    background-image: url('/banner-images/book6.png');
   }
   
   .banner .swiper-slide:nth-child(7n) {
-    background-image: url('src/assets/banner-images/book7.jpg');
+    background-image: url('/banner-images/book7.jpg');
   }
   
   .banner .swiper-slide:nth-child(8n) {
-    background-image: url('src/assets/banner-images/book8.webp');
+    background-image: url('/banner-images/book8.webp');
   }
   
   .banner .swiper-slide:nth-child(9n) {
-    background-image: url('src/assets/banner-images/book9.webp');
+    background-image: url('/banner-images/book9.webp');
   }
   
   
