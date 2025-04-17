@@ -38,7 +38,7 @@ const router = createBrowserRouter([
         path: "/books/:id",
         element: <SingleBook />,
         loader: async ({ params }) => {
-          const res = await fetch(`http://localhost:5000/books/${params.id}`);
+          const res = await fetch(`https://thereadingnook-production.up.railway.app/books/${params.id}`);
           const data = await res.json();
           return data.book; // 👈 make sure only the actual book object is returned
         },
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
         path: "edit-books/:id",
         element: <EditBooks />,
         loader: async ({ params }) => {
-          const res = await fetch(`http://localhost:5000/books/${params.id}`);
+          const res = await fetch(`https://thereadingnook-production.up.railway.app/books/${params.id}`);
           const data = await res.json();
           return data.book; // 👈 make sure only the actual book object is returned
         },
