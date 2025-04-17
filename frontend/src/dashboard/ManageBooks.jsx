@@ -16,7 +16,7 @@ const ManageBooks = () => {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/books/all-Books');
+        const response = await axios.get('https://thereadingnook-production.up.railway.app/books/all-Books');
         setBooks(response.data.books);
         setLoading(false);
       } catch (error) {
@@ -31,7 +31,7 @@ const ManageBooks = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this book?')) {
       try {
-        await axios.delete(`http://localhost:5000/books/delete/${id}`);
+        await axios.delete(`https://thereadingnook-production.up.railway.app/books/delete/${id}`);
         setBooks(books.filter(book => book._id !== id));
         handleSuccess("Book deleted successfully!");
       } catch (error) {
