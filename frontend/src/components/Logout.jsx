@@ -10,7 +10,7 @@ const Logout = () => {
     const handleLogout = () => {
         logOut()
             .then(() => {
-                navigate('/');
+                navigate('/logout');
             })
             .catch(error => {
                 console.error('Logout error:', error);
