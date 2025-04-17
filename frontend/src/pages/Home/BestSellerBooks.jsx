@@ -7,7 +7,7 @@ const BestSellerBooks = () => {
   const [books, setBooks] = useState([]);
 
   useEffect(() => {
-    fetch("hhttps://thereadingnook-production.up.railway.app/books/best-sellers")
+    fetch("https://thereadingnook-production.up.railway.app/books/best-sellers")
       .then((res) => res.json())
       .then((data) => {
         console.log("API Response:", data); // debug log
